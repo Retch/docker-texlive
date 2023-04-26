@@ -75,7 +75,7 @@ jobs:
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
         with:
           file: ./Dockerfile
-          build-args: $VERSION=${{ env.ALPINE }}
+          build-args: VERSION=${{ env.ALPINE }}
           context: .
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ env.VERSION }}
