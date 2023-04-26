@@ -3,3 +3,4 @@ FROM alpine:edge
 RUN apk add --no-cache \
 	texlive-full
 
+CMD ["/bin/bash"]
