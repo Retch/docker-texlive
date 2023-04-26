@@ -78,7 +78,7 @@ jobs:
           build-args: VERSION=${{ env.ALPINE }}
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.VERSION }}
+          tags: ${{ github.repository + env.VERSION }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
