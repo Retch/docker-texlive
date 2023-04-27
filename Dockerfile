@@ -6,6 +6,7 @@ LABEL \
   org.opencontainers.image.description="texlive-full in alpine docker for amd64, arm, arm64"
 
 RUN apk add --no-cache \
-	texlive-full
+	graphviz \
+  texlive-full
 
 CMD ["/bin/bash"]
