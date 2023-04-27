@@ -1,4 +1,4 @@
-name: 'build 2022'
+name: 'build 2021'
 
 on:
   push:
@@ -11,8 +11,8 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
-  VERSION: '2022'
-  ALPINE: '3.17'
+  VERSION: '2021'
+  ALPINE: '3.15'
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
