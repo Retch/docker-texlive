@@ -84,7 +84,7 @@ jobs:
           build-args: VERSION=${{ env.ALPINE }}
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ format('{0}/{1}:{2}', env.REGISTRY, ${{ steps.ownerrepo.outputs.lowercase }}, env.VERSION) }}
+          tags: ${{ format('{0}/{1}:{2}', env.REGISTRY, steps.ownerrepo.outputs.lowercase, env.VERSION) }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
