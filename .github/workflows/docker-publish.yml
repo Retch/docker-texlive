@@ -1,27 +1,33 @@
-name: 'build 2022'
+name: 'build texlive-full'
 
 on:
   push:
     branches: [ "main" ]
-    # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
   pull_request:
     branches: [ "main" ]
 
 env:
-  # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
-  VERSION: '2022'
-  ALPINE: '3.17'
-  # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-
 
 jobs:
   workflow:
     strategy:
       matrix:
-        platform: [linux/amd64, linux/arm64, linux/arm]
+        include:
+          - version: "2023"
+            alpine: "edge"
+          - version: "2022"
+            alpine: "3.17"
+          - version: "2021"
+            alpine: "3.15"
+          - version: "2020"
+            alpine: "3.13"
+          - version: "2019"
+            alpine: "3.12"
+          - version: "2017"
+            alpine: "3.8"
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -47,7 +53,6 @@ jobs:
         uses: sigstore/cosign-installer@f3c664df7af409cb4873aa5068053ba9d61a57b6 #v2.6.0
         with:
           cosign-release: 'v1.13.1'
-
 
       # Workaround: https://github.com/docker/build-push-action/issues/461
       - name: Setup Docker buildx
@@ -78,15 +83,14 @@ jobs:
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
         with:
           file: ./Dockerfile
-          build-args: VERSION=${{ env.ALPINE }}
+          build-args: VERSION=${{ matrix.alpine }}
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ format('{0}/{1}:{2}', env.REGISTRY, steps.ownerrepo.outputs.lowercase, env.VERSION) }}
+          tags: ${{ format('{0}/{1}:{2}', env.REGISTRY, steps.ownerrepo.outputs.lowercase, matrix.version) }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          platforms: ${{ matrix.platform }}
-
+          platforms: linux/amd64,linux/arm64,linux/arm
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
