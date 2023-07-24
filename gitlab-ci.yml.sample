@@ -1,0 +1,50 @@
+# This is a template gitlab-ci file for automated latex document builds.
+# You need to create a project access token (role "Developer" and scopes "api, write_repository" work for me).
+# In CI/CD settings under Variables the access token has to be added as "PROJECT_ACCESS_TOKEN" with Attributes "Masked", "Protected", "Expanded".
+# Customize this file to your needs and change the variables below.
+
+variables:
+  GITLAB_HOST: "git.example-host.com"
+  NAMESPACE_PROJECT: "your-namespace/your-project"
+
+stages:
+  - compile
+  - release
+
+compile:
+  stage: compile
+  image: ghcr.io/retch/docker-texlive:2023
+  before_script:
+    - echo $CI_JOB_ID
+    - echo A_JOB_ID=$CI_JOB_ID >> compile.env
+  script:
+    - tex -v
+    - pdflatex thesis.tex
+    - biber thesis
+    - makeglossaries thesis
+    - pdflatex thesis.tex
+    - cat thesis.log
+  artifacts:
+    expose_as: 'PDF'
+    paths: ['thesis.pdf']
+    reports:
+      dotenv: compile.env
+
+release:
+  stage: release
+  image: alpine:3.17
+  only:
+    - master
+  needs:
+    - job: compile
+      artifacts: true
+  before_script:
+    - apk add glab
+    - echo $CI_JOB_ID
+    - echo $A_JOB_ID
+    - echo $CI_COMMIT_SHORT_SHA
+  script:
+    - ls -l
+    - glab auth login --hostname $GITLAB_HOST --token $PROJECT_ACCESS_TOKEN
+    - >
+      glab release create $CI_COMMIT_SHORT_SHA -a '[{"name": "PDF", "url":"https://'$GITLAB_HOST'/'$NAMESPACE_PROJECT'/-/jobs/'${A_JOB_ID}'/artifacts/file/thesis.pdf", "link_type": "other"}]'
