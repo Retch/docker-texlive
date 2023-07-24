@@ -2,6 +2,7 @@
 # You need to create a project access token (role "Developer" and scopes "api, write_repository" work for me).
 # In CI/CD settings under Variables the access token has to be added as "PROJECT_ACCESS_TOKEN" with Attributes "Masked", "Protected", "Expanded".
 # Customize this file to your needs and change the variables below.
+# Hint: for the release stage this uses alpine + glab instead of the prebuilt gitlab release-cli Docker image because of the lacking support for arm architectures
 
 variables:
   GITLAB_HOST: "git.example-host.com"

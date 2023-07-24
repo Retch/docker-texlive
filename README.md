@@ -1,6 +1,6 @@
 # docker-texlive
 
-Docker multiarch image which contains texlive-full and biber. Can be used in ci/cd.
+Docker multiarch image which contains texlive-full. Can be used in ci/cd.
 
 ```
 docker pull ghcr.io/retch/docker-texlive:2023
