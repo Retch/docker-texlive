@@ -22,8 +22,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - version: "2023"
+          - version: "2024"
             alpine: "edge"
+          - version: "2023"
+            alpine: "3.19"
           - version: "2022"
             alpine: "3.17"
           - version: "2021"
