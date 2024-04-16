@@ -14,7 +14,7 @@ stages:
 
 compile:
   stage: compile
-  image: ghcr.io/retch/docker-texlive:2023
+  image: ghcr.io/retch/docker-texlive:2024
   before_script:
     - echo $CI_JOB_ID
     - echo A_JOB_ID=$CI_JOB_ID >> compile.env
